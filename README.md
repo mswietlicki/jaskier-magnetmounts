@@ -1,12 +1,12 @@
 # BR-20/15 electromagnet mounts for campervan cabinets
 
-Two parametric OpenSCAD designs for the 12 V [BR-20/15 holding electromagnet](#electromagnet)
+Three parametric OpenSCAD designs for the 12 V [BR-20/15 holding electromagnet](#electromagnet)
 (20 mm diameter, 15 mm long, M3 thread in the back, lead exiting from the side).
 Open a `.scad` file in OpenSCAD and use the Customizer panel to tweak sizes.
 
-| Corner mount (doors) | Flat drawer mount (drawers) |
-|---|---|
-| ![Corner mount with ghost magnet](preview_corner_mount.png) | ![Flat drawer mount with ghost magnet](preview_drawer_mount.png) |
+| Corner mount (doors) | Low profile corner mount (doors) | Flat drawer mount (drawers) |
+|---|---|---|
+| ![Corner mount with ghost magnet](preview_corner_mount.png) | ![Low profile corner mount with ghost magnet](preview_corner_mount_lowprofile.png) | ![Flat drawer mount with ghost magnet](preview_drawer_mount.png) |
 
 Renders use `part = "model"` and `show_magnet = true`: the translucent cylinder
 is the magnet and the red rod is its lead.
@@ -17,7 +17,8 @@ is the magnet and the red rod is its lead.
 | `corner_mount_lowprofile.scad` | Cabinet doors: same corner position, minimal front, screwed via tabs behind the magnet | 25.6 x 25.6 mm front, 48 mm deep incl. tabs |
 | `drawer_mount.scad` | Drawers: screws flat onto the cabinet side panel, nothing taller than the magnet | 30 mm wide, 20 mm tall, 49 mm deep |
 
-Ready-to-print STLs: `corner_mount.stl`, `drawer_mount_left.stl`, `drawer_mount_right.stl`.
+Ready-to-print STLs: `corner_mount.stl`, `corner_mount_lowprofile.stl`,
+`drawer_mount_left.stl`, `drawer_mount_right.stl`.
 
 ## Electromagnet
 
@@ -55,6 +56,8 @@ height and thread size before you buy.
   corners of a door opening.
 
 ## Low profile corner mount
+
+![Low profile corner mount, rear: two tabs with the lead running along the corner between them](preview_corner_mount_lowprofile_rear.png)
 
 * Same pocket, rear M3 screw and 45 degree cable slot as the corner mount,
   but the front is only a 2.5 mm shell around the magnet: a 25.6 mm square
