@@ -1,13 +1,43 @@
 # BR-20/15 electromagnet mounts for campervan cabinets
 
-Two parametric OpenSCAD designs for the 12 V BR-20/15 holding electromagnet
+Two parametric OpenSCAD designs for the 12 V [BR-20/15 holding electromagnet](#electromagnet)
 (20 mm diameter, 15 mm long, M3 thread in the back, lead exiting from the side).
 Open a `.scad` file in OpenSCAD and use the Customizer panel to tweak sizes.
+
+| Corner mount (doors) | Flat drawer mount (drawers) |
+|---|---|
+| ![Corner mount with ghost magnet](preview_corner_mount.png) | ![Flat drawer mount with ghost magnet](preview_drawer_mount.png) |
+
+Renders use `part = "model"` and `show_magnet = true`: the translucent cylinder
+is the magnet and the red rod is its lead.
 
 | File | Use | Footprint (defaults) |
 |---|---|---|
 | `corner_mount.scad` | Cabinet doors: sits in the inside corner between side panel and shelf/top | 40.6 x 40.6 mm, 18 mm deep |
 | `drawer_mount.scad` | Drawers: screws flat onto the cabinet side panel, nothing taller than the magnet | 30 mm wide, 20 mm tall, 49 mm deep |
+
+Ready-to-print STLs: `corner_mount.stl`, `drawer_mount_left.stl`, `drawer_mount_right.stl`.
+
+## Electromagnet
+
+The designs are sized for the BR-20/15 energise-to-hold electromagnet with an
+M3 rear thread. Product page with specs:
+[DomoticX: Elektromagneet 12V 2.5KG 20x15mm BR-20/15, M3](https://domoticx.net/webshop/elektromagneet-12v-25kg-20x15mm-hoog-br-2015-bevestiging-m3/).
+
+| Spec | Value |
+|---|---|
+| Voltage | 12 V DC |
+| Power | 2 W (200-250 mA) |
+| Holding force | 2.5 kg |
+| Body | 20 mm diameter, 15 mm high |
+| Lead | 200 mm |
+| Mounting | M3 threaded hole in the back |
+
+The same magnet is also sold with an
+[M4 thread](https://domoticx.net/webshop/elektromagneet-12v-25kg-20x15mm-hoog-br-2015-bevestiging-m4/).
+That one fits the same pocket. Set `rear_screw_d = 4.5` and use an M4 screw.
+The generic version of this part is often listed as P20/15. Check the diameter,
+height and thread size before you buy.
 
 ## Corner mount
 
@@ -24,6 +54,8 @@ Open a `.scad` file in OpenSCAD and use the Customizer panel to tweak sizes.
   corners of a door opening.
 
 ## Flat drawer mount
+
+![Flat drawer mount, wall side: the lead runs in the groove of the mounting tab](preview_drawer_mount_wall_side.png)
 
 * All material stays inside the 20 mm vertical envelope of the magnet, so it
   fits where there is no height to spare (drawer slide above, drawer side below).
@@ -66,6 +98,7 @@ Open a `.scad` file in OpenSCAD and use the Customizer panel to tweak sizes.
 |---|---|---|
 | `magnet_d`, `magnet_h` | 20, 15 | magnet body |
 | `fit` | 0.3 | radial clearance of the pocket |
+| `rear_screw_d` | 3.4 | rear screw through hole (4.5 for the M4 magnet) |
 | `face_protrusion` | 1 | magnet face sticks out past the mount front |
 | `cable_d` | 4 | slot / channel / groove width for the lead + heat shrink |
 | `wall_gap` (drawer) | 7 | bend room between magnet and wall |
