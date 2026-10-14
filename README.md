@@ -6,7 +6,8 @@ Open a `.scad` file in OpenSCAD and use the Customizer panel to tweak sizes.
 
 | File | Use | Footprint (defaults) |
 |---|---|---|
-| `corner_mount.scad` | Cabinet doors: sits in the inside corner between side panel and shelf/top | 40.6 x 40.6 mm, 18 mm deep |
+| `corner_mount.scad` | Cabinet doors: sits in the inside corner between side panel and shelf/top, side flanges | 40.6 x 40.6 mm, 18 mm deep |
+| `corner_mount_lowprofile.scad` | Cabinet doors: same corner position, minimal front, screwed via tabs behind the magnet | 25.6 x 25.6 mm front, 48 mm deep incl. tabs |
 | `drawer_mount.scad` | Drawers: screws flat onto the cabinet side panel, nothing taller than the magnet | 30 mm wide, 20 mm tall, 49 mm deep |
 
 ## Corner mount
@@ -22,6 +23,20 @@ Open a `.scad` file in OpenSCAD and use the Customizer panel to tweak sizes.
   shelf, one against the side panel. Both screws are driven from the front.
 * The part is symmetric about its diagonal, so the same print fits all four
   corners of a door opening.
+
+## Low profile corner mount
+
+* Same pocket, rear M3 screw and 45 degree cable slot as the corner mount,
+  but the front is only a 2.5 mm shell around the magnet: a 25.6 mm square
+  with one rounded corner. No side flanges.
+* Two 4 mm tabs run 30 mm along the wall and along the shelf behind the back
+  plate, each with two countersunk holes for 3 mm wood screws. From the
+  front they are completely hidden behind the body.
+* The tabs stop 4 mm short of the corner, so the lead comes out of the slot,
+  bends backwards and runs along the open corner between the two tabs.
+  `wall_t` sets the distance magnet to panel and therefore the bend radius
+  (2.5 mm gives about 5.6 mm, raise it if the heat shrink is stiff).
+* Also symmetric about its diagonal: one print fits all four corners.
 
 ## Flat drawer mount
 
@@ -55,6 +70,9 @@ Open a `.scad` file in OpenSCAD and use the Customizer panel to tweak sizes.
 
 * `part = "print"` (default) already lays each part in its print orientation:
   corner mount on its back face, drawer mount on its flat side. No supports.
+* The low profile corner mount prints on its front face with the tabs up.
+  The pocket bottom is then a 20.6 mm bridge: fine for PETG with cooling,
+  otherwise enable supports for that one surface only.
 * PETG or ABS/ASA recommended (the van gets hot, PLA creeps). 3-4 perimeters,
   0.2 mm layers.
 * `fit` controls the pocket clearance: 0.3 mm is a light press fit on most
@@ -70,4 +88,5 @@ Open a `.scad` file in OpenSCAD and use the Customizer panel to tweak sizes.
 | `cable_d` | 4 | slot / channel / groove width for the lead + heat shrink |
 | `wall_gap` (drawer) | 7 | bend room between magnet and wall |
 | `flange_len` (corner) | 14 | flange length past the body |
-| `tab_len` (drawer) | 30 | mounting tab length behind the magnet |
+| `tab_len` (drawer, low profile) | 30 | mounting tab length behind the magnet |
+| `wall_t` (low profile) | 2.5 | shell to the panels, sets the cable bend room |
