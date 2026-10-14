@@ -108,8 +108,8 @@ height and thread size before you buy.
 * The low profile corner mount prints on its front face with the tabs up.
   The pocket bottom is then a 20.6 mm bridge: fine for PETG with cooling,
   otherwise enable supports for that one surface only.
-* PETG or ABS/ASA recommended (the van gets hot, PLA creeps). 3-4 perimeters,
-  0.2 mm layers.
+* PETG or ABS/ASA recommended (the van gets hot, PLA creeps). 5 perimeters,
+  0.2 mm layers (see the PrusaSlicer profile below).
 * All inner corners that carry load are rounded with `fillet_r` (flanges to
   body, tabs to back plate, the two low profile tabs to each other, drawer
   cradles to back plate). They add no overhangs in the orientations above.
@@ -117,6 +117,38 @@ height and thread size before you buy.
   sit under the pocket roof that needs support anyway.
 * `fit` controls the pocket clearance: 0.3 mm is a light press fit on most
   printers, raise it to 0.4 if the magnet will not slide in.
+
+## PrusaSlicer profile (Prusa CORE One / One+, 0.4 HF nozzle, PETG)
+
+[`prusaslicer/magnet_mounts_COREONE_HF04_PETG.ini`](prusaslicer/magnet_mounts_COREONE_HF04_PETG.ini)
+is a config bundle built on the Prusa system profiles (version 2.5.11). Import it with
+**File > Import > Import Config Bundle**. It adds and selects:
+
+* print `0.20mm STRUCTURAL Magnet mounts @COREONE HF0.4`
+* filament `Prusament PETG Magnet mounts @COREONE HF0.4`, plus
+  `Generic PETG Magnet mounts @COREONE HF0.4` for other PETG brands
+
+Each preset inherits from the Prusa preset of the same kind, so PrusaSlicer marks
+the changed values. To make the changes by hand instead, start from these presets:
+
+| Where | Setting | Prusa preset | Mounts |
+|---|---|---|---|
+| Print, based on `0.25mm STRUCTURAL @COREONE HF0.4` | Layer height | 0.25 | 0.2 |
+| | Perimeters | 2 | 5 |
+| | Solid layers top / bottom | 4 / 3 | 5 / 4 |
+| | Fill density, pattern | 15 % grid | 50 % gyroid |
+| | Solid infill threshold area | 0 | 15 mm² |
+| | Supports | for support enforcers only | support on build plate only |
+| | Top contact Z distance | 0.25 | 0.2 |
+| | Brim width | 0 | 3 mm |
+| Filament, based on `Prusament PETG @COREONE HF0.4` | Nozzle temperature, other layers | 255 °C | 260 °C (Generic PETG: 250 → 255) |
+| | Fan speed min / max | 30 / 60 % | 15 / 35 % |
+
+Everything else stays as Prusa set it, including the slower STRUCTURAL
+perimeter speeds (better layer bonding), 0.2 mm elephant foot compensation
+(keeps the pocket entry from closing up when printing front face down),
+"Don't support bridges" off (the pocket bottom gets supported), and the
+60 % bridge fan.
 
 ## Key parameters
 
