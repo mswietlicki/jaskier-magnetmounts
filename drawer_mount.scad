@@ -51,6 +51,9 @@ tab_t = 5;                      // tab thickness (must be > groove_depth)
 wood_screw_d = 3.4;             // clearance hole for 3 mm wood screws
 wood_screw_head_d = 6.5;        // countersink diameter
 
+/* [Fillets] */
+fillet_r = 3;                   // inner corner radius: tab and cradles to back plate (0 = sharp, > 3.5 reaches the screw heads)
+
 $fn = 96;
 
 // ---------------------------------------------------------------- derived
@@ -80,6 +83,9 @@ module csk_hole(d, head_d, l) {
 // Box spanning the full magnet height (Z from -R to +R) - nothing is ever taller.
 module slab(x0, x1, y0, y1) { translate([x0, y0, -R]) cube([x1 - x0, y1 - y0, magnet_d]); }
 
+// Quarter round filling the corner between the +X and +Y axes (overlaps both by eps).
+module fillet2d(r) { difference() { translate([-eps, -eps]) square(r + eps); translate([r, r]) circle(r = r); } }
+
 // ---------------------------------------------------------------- solids
 module wall_cradle() { slab(0, wall_gap + bite, y_front, y_back); }          // wall side, split by the cable channel
 module far_cradle()  { slab(cx + Rp - bite, x_far, y_front, y_back); }       // drawer side, full length
@@ -91,6 +97,16 @@ module tab() {                                                                //
         slab(0, tab_t, y_tab - eps, y_tab + tab_len - rr);
         for (z = [-R + rr, R - rr])
             translate([0, y_tab + tab_len - rr, z]) rotate([0, 90, 0]) cylinder(r = rr, h = tab_t);
+    }
+}
+
+// Inner corners against the back plate, full height. The pocket cut trims the
+// cradle ones down to what is left above and below the magnet.
+module fillets() {
+    if (fillet_r > 0) translate([0, 0, -R]) linear_extrude(magnet_d) {
+        translate([tab_t, y_tab]) fillet2d(fillet_r);                            // tab
+        translate([wall_gap + bite, y_back]) mirror([0, 1]) fillet2d(fillet_r);  // wall cradle
+        translate([cx + Rp - bite, y_back]) rotate(180) fillet2d(fillet_r);      // drawer-side cradle
     }
 }
 
@@ -111,7 +127,7 @@ module tab_screws() {
 
 module drawer_mount() {
     difference() {
-        union() { wall_cradle(); far_cradle(); back_plate(); tab(); }
+        union() { wall_cradle(); far_cradle(); back_plate(); tab(); fillets(); }
         pocket();
         rear_hole();
         wall_channel();

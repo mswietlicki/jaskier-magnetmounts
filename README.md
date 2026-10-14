@@ -110,6 +110,11 @@ height and thread size before you buy.
   otherwise enable supports for that one surface only.
 * PETG or ABS/ASA recommended (the van gets hot, PLA creeps). 3-4 perimeters,
   0.2 mm layers.
+* All inner corners that carry load are rounded with `fillet_r` (flanges to
+  body, tabs to back plate, the two low profile tabs to each other, drawer
+  cradles to back plate). They add no overhangs in the orientations above.
+  Printed front face down, only the drawer cradle fillets overhang, and they
+  sit under the pocket roof that needs support anyway.
 * `fit` controls the pocket clearance: 0.3 mm is a light press fit on most
   printers, raise it to 0.4 if the magnet will not slide in.
 
@@ -126,3 +131,4 @@ height and thread size before you buy.
 | `flange_len` (corner) | 14 | flange length past the body |
 | `tab_len` (drawer, low profile) | 30 | mounting tab length behind the magnet |
 | `wall_t` (low profile) | 2.5 | shell to the panels, sets the cable bend room |
+| `fillet_r` | 3 | radius of the rounded inner corners where flanges/tabs meet the body (0 = sharp) |

@@ -40,6 +40,9 @@ flange_round = 3;        // corner radius of the flange ends
 wood_screw_d = 4.2;      // clearance hole for 3.5-4 mm wood screws
 wood_screw_head_d = 8;   // countersink diameter
 
+/* [Fillets] */
+fillet_r = 3;            // inner corner radius where the flanges meet the body (0 = sharp, > 4 reaches the screw heads)
+
 $fn = 96;
 
 // ---------------------------------------------------------------- derived
@@ -67,10 +70,17 @@ module csk_hole(d, head_d, l) {
 }
 
 // ---------------------------------------------------------------- 2D profile (XZ plane)
+// Body plus flange stubs (the full flanges are added in 3D below), with the
+// inner corners between body and flanges rounded to fillet_r.
 module body_profile() {
-    hull() {
-        translate([cx, cz]) circle(r = Ro);
-        square([cx, cz]);                            // fills the corner to the walls
+    stub = x_end - flange_round;                     // stays clear of the rounded flange ends
+    offset(r = -fillet_r) offset(delta = fillet_r) union() {
+        hull() {
+            translate([cx, cz]) circle(r = Ro);
+            square([cx, cz]);                        // fills the corner to the walls
+        }
+        square([stub, flange_t]);
+        square([flange_t, stub]);
     }
 }
 

@@ -44,6 +44,9 @@ wood_screw_d = 3.4;      // clearance hole for 3 mm wood screws
 wood_screw_head_d = 6.5; // countersink diameter
 screws_per_tab = 2;      // 1 or 2
 
+/* [Fillets] */
+fillet_r = 3;            // inner corner radius: tabs to back plate and tab to tab (0 = sharp, > 3.5 reaches the screw heads)
+
 $fn = 96;
 
 // ---------------------------------------------------------------- derived
@@ -74,6 +77,9 @@ module csk_hole(d, head_d, l) {
     translate([0, 0, -cone_h]) cylinder(d1 = d, d2 = head_d, h = cone_h + eps);
     cylinder(d = head_d, h = 20);                    // clearance above the head
 }
+
+// Quarter round filling the corner between the +X and +Y axes (overlaps both by eps).
+module fillet2d(r) { difference() { translate([-eps, -eps]) square(r + eps); translate([r, r]) circle(r = r); } }
 
 // ---------------------------------------------------------------- 2D profiles (XZ plane)
 // Square W x W sitting in the corner, far corner rounded around the magnet.
@@ -122,12 +128,47 @@ module wall_tab_screws() {
 }
 module shelf_tab_screws() { multmatrix([[0, 0, 1, 0], [0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 1]]) wall_tab_screws(); }
 
+// ---------------------------------------------------------------- fillets
+merged = tab_t > cable_d;                            // the two tabs form one L with an inside corner
+
+// Where the inner face of the wall tab leaves the back plate.
+module wall_tab_fillet() {
+    z0 = merged ? tab_t + fillet_r : cable_d;        // the L corner piece below takes over from here
+    translate([tab_t, y_tab, z0]) linear_extrude(W - z0) fillet2d(fillet_r);
+}
+module shelf_tab_fillet() { multmatrix([[0, 0, 1, 0], [0, 1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 1]]) wall_tab_fillet(); }
+
+// Inside corner of the L along the full tab length (trimmed to the rounded tab ends),
+// plus the piece that carries the back plate fillet around that corner.
+module l_corner_fillet() {
+    intersection() {
+        translate([tab_t, y_tab - eps, tab_t]) rotate([90, 0, 0]) mirror([0, 0, 1])
+            linear_extrude(tab_len + eps) fillet2d(fillet_r);
+        hull() { wall_tab(); shelf_tab(); }
+    }
+    // revolve axis = corner arc centre, parallel to Y; sweeps from -Z round to -X
+    multmatrix([[0, -1, 0, tab_t + fillet_r], [0, 0, 1, y_tab], [-1, 0, 0, tab_t + fillet_r], [0, 0, 0, 1]])
+        rotate_extrude(angle = 90) translate([fillet_r, 0]) mirror([1, 0]) fillet2d(fillet_r);
+}
+
+module fillets() {
+    if (fillet_r > 0) {
+        wall_tab_fillet();
+        shelf_tab_fillet();
+        if (merged) l_corner_fillet();
+    }
+}
+
 module corner_mount_lp() {
     difference() {
-        union() { body(); wall_tab(); shelf_tab(); }
+        union() {
+            difference() { body(); cable_slot(); }   // slot cuts the body only, not the tab roots behind it
+            wall_tab();
+            shelf_tab();
+            fillets();
+        }
         pocket();
         rear_hole();
-        cable_slot();
         wall_tab_screws();
         shelf_tab_screws();
     }
